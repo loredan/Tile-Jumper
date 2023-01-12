@@ -35,7 +35,17 @@ public class DCEL
 
     public class Face
     {
-        Site site;
-        HalfEdge outerComponent;
+        public Site site;
+        public HalfEdge outerComponent;
+    }
+
+    public HalfEdge createHalfEdge(Face face) {
+        HalfEdge halfEdge = new HalfEdge();
+        halfEdge.incidentFace = face;
+        if (face.outerComponent == null) {
+            face.outerComponent = halfEdge;
+        }
+        _halfEdges.Add(halfEdge);
+        return halfEdge;
     }
 }

@@ -6,7 +6,7 @@ public class BeachLine
 {
     private Arc _root;
 
-    private Arc _nil = new Arc(null); // Sentinel node (CLRS 4th ed, ch 10.4)
+    public Arc nil = new Arc(null); // Sentinel node (CLRS 4th ed, ch 10.4)
     public class Arc
     {
         public enum Color { RED, BLACK };
@@ -35,7 +35,7 @@ public class BeachLine
     public Arc GetLeftmostArc()
     {
         Arc cursor = _root;
-        while (cursor.left != _nil)
+        while (cursor.left != nil)
         {
             cursor = cursor.left;
         }
@@ -50,11 +50,11 @@ public class BeachLine
         {
             double breakpointLeft = Double.NegativeInfinity;
             double breakpointRight = Double.PositiveInfinity;
-            if (cursor.prev != _nil)
+            if (cursor.prev != nil)
             {
                 breakpointLeft = ComputeBreakpoint(cursor.prev.site.point, cursor.site.point, sweep);
             }
-            if (cursor.next != _nil)
+            if (cursor.next != nil)
             {
                 breakpointRight = ComputeBreakpoint(cursor.site.point, cursor.next.site.point, sweep);
             }
@@ -76,11 +76,11 @@ public class BeachLine
 
     public void SetRoot(Arc arc)
     {
-        arc.parent = _nil;
-        arc.left = _nil;
-        arc.right = _nil;
-        arc.prev = _nil;
-        arc.next = _nil;
+        arc.parent = nil;
+        arc.left = nil;
+        arc.right = nil;
+        arc.prev = nil;
+        arc.next = nil;
         _root = arc;
     }
 
@@ -103,7 +103,7 @@ public class BeachLine
 
     public void InsertBefore(Arc node, Arc arc)
     {
-        if (node.left == _nil)
+        if (node.left == nil)
         {
             node.left = arc;
             arc.parent = node;
@@ -114,8 +114,8 @@ public class BeachLine
             arc.parent = node.prev;
         }
 
-        arc.left = _nil;
-        arc.right = _nil;
+        arc.left = nil;
+        arc.right = nil;
 
         arc.prev = node.prev;
         arc.prev.next = arc;
@@ -128,7 +128,7 @@ public class BeachLine
 
     public void InsertAfter(Arc node, Arc arc)
     {
-        if (node.right == _nil)
+        if (node.right == nil)
         {
             node.right = arc;
             arc.parent = node;
@@ -139,8 +139,8 @@ public class BeachLine
             arc.parent = node.next;
         }
 
-        arc.left = _nil;
-        arc.right = _nil;
+        arc.left = nil;
+        arc.right = nil;
 
         arc.next = node.next;
         arc.next.prev = arc;

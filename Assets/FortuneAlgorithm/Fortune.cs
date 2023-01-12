@@ -27,11 +27,43 @@ public class Fortune
         }
     }
 
+    private void ProcessSiteEvent(SiteEvent siteEvent)
+    {
+        if (beachLine.IsEmpty())
+        {
+            beachLine.SetRoot(new BeachLine.Arc(_site));
+            return;
+        }
+
+        BeachLine.Arc arcToSplit = beachLine.LocateArcAbove(_site.point, y);
+        if (arcToSplit.circleEvent != null)
+        {
+            events.Remove(arcToSplit.circleEvent.y);
+            arcToSplit.circleEvent = null;
+        }
+
+        BeachLine.Arc middleArc = SplitArc(beachLine, arcToSplit);
+        BeachLine.Arc leftArc = middleArc.prev;
+        BeachLine.Arc rightArc = middleArc.next;
+
+        leftArc.rightHalfEdge = diagram.createHalfEdge(leftArc.site.face);
+        middleArc.leftHalfEdge = diagram.createHalfEdge(middleArc.site.face);
+        leftArc.rightHalfEdge.twin = middleArc.leftHalfEdge;
+        middleArc.leftHalfEdge.twin = leftArc.rightHalfEdge;
+        middleArc.rightHalfEdge = middleArc.leftHalfEdge;
+        rightArc.leftHalfEdge = leftArc.rightHalfEdge;
+
+        if (leftArc.prev != beachLine.nil)
+        {
+
+        }
+    }
+
     public abstract class Event
     {
         public float y;
 
-        public abstract void ProcessEvent(SortedList<float, Event> events, BeachLine beachLine);
+        public abstract void ProcessEvent(SortedList<float, Event> events, BeachLine beachLine, DCEL diagram);
     }
 
     public class SiteEvent : Event
@@ -43,7 +75,7 @@ public class Fortune
             y = site.y;
         }
 
-        public override void ProcessEvent(SortedList<float, Event> events, BeachLine beachLine)
+        public override void ProcessEvent(SortedList<float, Event> events, BeachLine beachLine, DCEL diagram)
         {
             if (beachLine.IsEmpty())
             {
@@ -61,6 +93,18 @@ public class Fortune
             BeachLine.Arc middleArc = SplitArc(beachLine, arcToSplit);
             BeachLine.Arc leftArc = middleArc.prev;
             BeachLine.Arc rightArc = middleArc.next;
+
+            leftArc.rightHalfEdge = diagram.createHalfEdge(leftArc.site.face);
+            middleArc.leftHalfEdge = diagram.createHalfEdge(middleArc.site.face);
+            leftArc.rightHalfEdge.twin = middleArc.leftHalfEdge;
+            middleArc.leftHalfEdge.twin = leftArc.rightHalfEdge;
+            middleArc.rightHalfEdge = middleArc.leftHalfEdge;
+            rightArc.leftHalfEdge = leftArc.rightHalfEdge;
+
+            if (leftArc.prev != beachLine.nil)
+            {
+
+            }
         }
 
         private BeachLine.Arc SplitArc(BeachLine beachLine, BeachLine.Arc arc)
